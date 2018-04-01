@@ -8,9 +8,13 @@ This kata is based in [kata texas coding dojo](http://codingdojo.org/kata/TexasH
 
 You work for a cable network; specifically, you are the resident hacker for a Texas Hold’Em Championship show.
 
-The show’s producer has come to you for a favor. It seems the play-by-play announcers just can’t think very fast. All beauty, no brains. The announcers could certainly flap their jaws well enough, if they just knew what hands the players were holding and which hand won the round. Since this is live TV, they need those answers quick. Time to step up to the plate. Bob, the producer, explains what you need to do.
+The show’s producer has come to you for a favor. It seems the play-by-play announcers just can’t think very fast. 
+All beauty, no brains. The announcers could certainly flap their jaws well enough, if they just knew what hands the players were holding and which hand won the round. 
+Since this is live TV, they need those answers quick. Time to step up to the plate. Bob, the producer, explains what you need to do.
 
-**BOB**: Each player’s cards for the round will be on a separate line of the input. Each card is a pair of characters, the first character represents the face, the second is the suit. Cards are separated by exactly one space. Here’s a sample hand.
+**BOB**: Each player’s cards for the round will be on a separate line of the input. 
+Each card is a pair of characters, the first character represents the face, the second is the suit. 
+Cards are separated by exactly one space. Here’s a sample hand.
 
 ```bash
   Kc 9s Ks Kd 9d 3c 6d
@@ -21,7 +25,8 @@ The show’s producer has come to you for a favor. It seems the play-by-play ann
   7s Ts Ks Kd 9d
 ```
 
-**YOU**: Okay, I was going ask what character to use for 10, but I guess ’T’ is it. And ‘c’, ’d’, ‘h’ and ’s’ for the suits, makes sense. Why aren’t seven cards listed for every player?
+**YOU**: Okay, I was going ask what character to use for 10, but I guess ’T’ is it. 
+And ‘c’, ’d’, ‘h’ and ’s’ for the suits, makes sense. Why aren’t seven cards listed for every player?
 
 **BOB**: Well, if a player folds, only his hole cards and the community cards he’s seen so far are shown.
 
@@ -53,21 +58,33 @@ The show’s producer has come to you for a favor. It seems the play-by-play ann
 
 **BOB**: Hey! Show’s on in ten minutes! Get to work!
 
-### Texas Hold'em poker basic rules
+### Texas Hold'em poker rules
 
 
 Texas hold'em is a variation of the card game of poker. 
 
-Two cards, known as the hole cards, are dealt face down to each player, and then five community cards are dealt face up in three stages. 
+It is played with an English pack of 52 cards (jokers are not used). Tables join between 6 and 10 players.
 
-1. The flop: The dealer flips three cards face up on the table
-2. The turn or fourth street: an additional single card
-3. The river or fifth street: a final face-up card
- 
+In Texas Hold'em players receive two cards. Another five community cards are put face up on the table; these cards are used by all players to get their best combination.
 
-Each player seeks the best five card poker hand from any combination of the seven cards of the five community cards and their own two hole cards.
+This is the ranking of the possible poker hands:
 
-![texas_holdem](texas_holdem_rankings.jpg)
-
+<p align="center">
+  <img src="texas_holdem_rankings.jpg">
+</p>
 
 
+If two of more players share the same kind of hand, the best of them is evaluated according to the rank of the cards (Ace is the highest card, 2 is the lowest). If they have still the same combination, the remaining cards are evaluated in search of the high card.
+
+If two of more players share the same kind of hand, the best of them is evaluated according to the rank of the cards (Ace is the highest card, 2 is the lowest). If they have still the same combination, the remaining cards are evaluated in search of the high card.
+
+Betting:
+
+The five community cards are shown in three phases named **flop** (3 cards are shown), **turn** (the fourth card is shown) and **river** (the last card is shown).
+
+Four betting rounds are done during each dealing: the preflop (before showing any community card), and another round every time any community card is shown (flop, turn and river).
+
+
+### Out of scope / to improve
+
+- Check card repetitions
