@@ -1,13 +1,14 @@
 package com.albertortizl.katas.poker
 
-import org.scalatest.{FeatureSpec, GivenWhenThen}
-
-class TexasHoldemSpec extends FeatureSpec with GivenWhenThen {
+import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
 
 
-  val pokerHandsEvaluator = new PokerHandsEvaluator()
+class TexasHoldemEvaluatorSpec extends FeatureSpec with GivenWhenThen with Matchers{
 
-  feature("Evaluate hands") {
+
+  val texasHoldemEvaluator = new TexasHoldemEvaluator()
+
+  feature("Evaluate showdown") {
 
     info("As a texas hold'em live TV show announcer")
     info("I want to know what hands the players are holding and which player won")
@@ -15,7 +16,7 @@ class TexasHoldemSpec extends FeatureSpec with GivenWhenThen {
 
     scenario("calculate ranking of a poker hands") {
 
-      Given("a round of hands")
+      Given("a hands of poker")
       val hands = List(
         "Kc 9s Ks Kd 9d 3c 6d",
         "9c Ah Ks Kd 9d 3c 6d",
@@ -24,11 +25,13 @@ class TexasHoldemSpec extends FeatureSpec with GivenWhenThen {
         "4d 2d Ks Kd 9d 3c 6d",
         "7s Ts Ks Kd 9d"
       )
-      When("evaluator is called with them")
-      pokerHandsEvaluator eval
-        Then("hands with seven cards should be ranked")
 
-      pending
+      When("showdown is evaluated")
+      val result = texasHoldemEvaluator evaluateShowdown hands
+
+      Then("hands with seven cards should be ranked")
+
+      result.isRight shouldBe (true)
     }
 
     scenario("calculate the winner") {
