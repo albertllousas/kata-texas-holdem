@@ -3,10 +3,10 @@ package com.albertortizl.katas.poker
 import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
 
 
-class TexasHoldemEvaluatorSpec extends FeatureSpec with GivenWhenThen with Matchers{
+class TexasHoldemShowdownSpec extends FeatureSpec with GivenWhenThen with Matchers{
 
 
-  val texasHoldemEvaluator = new TexasHoldemEvaluator()
+  val texasHoldemShowdown = new TexasHoldemShowdown()
 
   feature("Evaluate showdown") {
 
@@ -26,8 +26,9 @@ class TexasHoldemEvaluatorSpec extends FeatureSpec with GivenWhenThen with Match
         "7s Ts Ks Kd 9d"
       )
 
+
       When("showdown is evaluated")
-      val result = texasHoldemEvaluator evaluateShowdown hands
+      val result = texasHoldemShowdown evaluate hands
 
       Then("hands with seven cards should be ranked")
 
