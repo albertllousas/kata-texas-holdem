@@ -22,3 +22,27 @@ case object King extends Rank
 case object Ace extends Rank
 
 case class Card(rank: Rank, suite: Suite)
+
+object Rank {
+
+  private val mappings = List(
+    (Two, "2"), (Three, "3"), (Four, "4"), (Five, "5"), (Six, "6"), (Seven, "7"),
+    (Eight, "8"), (Nine, "9"), (Ten, "T"), (Jack, "J"), (Queen, "Q"), (King, "K"), (Ace, "A")
+  )
+
+  def parse(abbreviation: String): Either[String, Rank] =
+    mappings
+      .find(_._2 == abbreviation)
+      .map(_._1)
+      .map(Right(_))
+      .getOrElse(Left(s"Error parsing abbreviation '$abbreviation', is not a valid rank"))
+
+  def abbreviation(rank:Rank) : String =
+    mappings
+      .find(_._1 == rank)
+      .map(_._2)
+      .get // Rank is a sealed class, so it is totally safe call 'get' method here
+}
+
+
+

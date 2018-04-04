@@ -11,6 +11,11 @@ class HandTest extends FunSpec with Matchers{
       hand.cards should have size 0
     }
 
+    it("should generate a hand with one cards from a single card as string") {
+      val hand = Hand parse "Ks"
+      hand.cards should have size 1
+    }
+
 //    it("should produce NoSuchElementException when head is invoked") {
 //      assertThrows[NoSuchElementException] {
 //        Set.empty.head
