@@ -23,20 +23,26 @@ case object Ace extends Rank
 
 case class Card(rank: Rank, suite: Suite)
 
+object Deck {
+  val suites: List[Suite] = List(Hearts, Diamonds, Spades, Clubs)
+  val ranks: List[Rank] = List(Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace)
+  val cards: List[Card] = for (rank <- ranks; suite <- suites) yield Card(rank, suite)
+}
+
 object Suite {
 
   private val (h, d, s, c) = ("h", "d", "s", "c")
 
-  def parse(abbreviation: String): Either[String, Suite] =
-    abbreviation match {
+  def parse(str: String): Either[String, Suite] =
+    str match {
       case `h` => Right(Hearts)
       case `d` => Right(Diamonds)
       case `s` => Right(Spades)
       case `c` => Right(Clubs)
-      case  _ => Left(s"Error parsing abbreviation '$abbreviation', is not a valid suite")
+      case  _ => Left(s"Error parsing '$str', is not a valid suite")
     }
 
-  def abbreviation(suite:Suite) : String =
+  def abbreviate(suite:Suite) : String =
     suite match {
       case Hearts => h
       case Diamonds => d
@@ -52,18 +58,33 @@ object Rank {
     (Eight, "8"), (Nine, "9"), (Ten, "T"), (Jack, "J"), (Queen, "Q"), (King, "K"), (Ace, "A")
   )
 
-  def parse(abbreviation: String): Either[String, Rank] =
+  def parse(str: String): Either[String, Rank] =
     mappings
-      .find(_._2 == abbreviation)
+      .find(_._2 == str)
       .map(_._1)
       .map(Right(_))
-      .getOrElse(Left(s"Error parsing abbreviation '$abbreviation', is not a valid rank"))
+      .getOrElse(Left(s"Error parsing '$str', is not a valid rank"))
 
-  def abbreviation(rank:Rank) : String =
+  def abbreviate(rank:Rank) : String =
     mappings
       .find(_._1 == rank)
       .map(_._2)
       .get // Rank is a sealed class, so it is totally safe call 'get' method here
+}
+
+object Card {
+
+  def parse(str: String): Either[String, Card] =
+    str.length match {
+      case 2 => for {
+        rank <- Rank parse str.charAt(0).toString
+        suite <- Suite parse str.charAt(1).toString
+      } yield Card(rank, suite)
+      case _ => Left(s"Error parsing '$str', is not a valid card")
+    }
+
+  def abbreviate(card: Card): String = (Rank abbreviate card.rank) + (Suite abbreviate card.suite)
+
 }
 
 

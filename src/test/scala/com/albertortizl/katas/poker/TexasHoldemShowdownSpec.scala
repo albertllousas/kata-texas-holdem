@@ -26,7 +26,6 @@ class TexasHoldemShowdownSpec extends FeatureSpec with GivenWhenThen with Matche
         "7s Ts Ks Kd 9d"
       )
 
-
       When("showdown is evaluated")
       val result = texasHoldemShowdown evaluate hands
 
