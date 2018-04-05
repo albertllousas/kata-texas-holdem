@@ -20,7 +20,7 @@ class CardTest extends FunSpec with Matchers with TableDrivenPropertyChecks {
       all(cards) should be('right)
     }
 
-    it("should non parse a non valid string abbreviation") {
+    it("should non parse a non valid string") {
       forAll(invalidStringCards) { str =>
         Card parse str should be('left)
       }
@@ -29,7 +29,7 @@ class CardTest extends FunSpec with Matchers with TableDrivenPropertyChecks {
 
   describe("abbreviate card") {
 
-    it("should parse card to a string") {
+    it("should abbreviate card to a string") {
       val abbreviations = Deck.cards.map(Card.abbreviate)
       abbreviations should contain theSameElementsInOrderAs validStringCards
     }

@@ -23,7 +23,7 @@ class SuiteTest extends FunSpec with Matchers with TableDrivenPropertyChecks {
   }
   describe("abbreviate suite") {
 
-    it("should parse suite to a string abbreviation") {
+    it("should abbreviate suite to a string") {
       val abbreviations = Deck.suites map Suite.abbreviate
       abbreviations should contain theSameElementsInOrderAs List("h", "d", "s", "c")
     }
