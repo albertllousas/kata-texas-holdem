@@ -23,6 +23,28 @@ case object Ace extends Rank
 
 case class Card(rank: Rank, suite: Suite)
 
+object Suite {
+
+  private val (h, d, s, c) = ("h", "d", "s", "c")
+
+  def parse(abbreviation: String): Either[String, Suite] =
+    abbreviation match {
+      case `h` => Right(Hearts)
+      case `d` => Right(Diamonds)
+      case `s` => Right(Spades)
+      case `c` => Right(Clubs)
+      case  _ => Left(s"Error parsing abbreviation '$abbreviation', is not a valid suite")
+    }
+
+  def abbreviation(suite:Suite) : String =
+    suite match {
+      case Hearts => h
+      case Diamonds => d
+      case Spades => s
+      case Clubs => c
+    }
+}
+
 object Rank {
 
   private val mappings = List(
