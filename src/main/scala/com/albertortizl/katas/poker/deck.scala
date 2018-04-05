@@ -6,7 +6,9 @@ case object Diamonds extends Suite //♦
 case object Spades extends Suite //♠
 case object Clubs extends Suite //♣
 
-sealed abstract class Rank
+sealed abstract class Rank {
+  def of(suite:Suite) :Card = Card(this, suite)
+}
 case object Two extends Rank
 case object Three extends Rank
 case object Four extends Rank
