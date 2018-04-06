@@ -54,24 +54,34 @@ object Suite {
 }
 
 object Rank {
-//  https://github.com/danielmiladinov/poker-hands-kata-scala/blob/master/src/main/scala/net/miladinov/poker/models/Value.scala
-  private val mappings = List(
-    (Two, "2"), (Three, "3"), (Four, "4"), (Five, "5"), (Six, "6"), (Seven, "7"),
-    (Eight, "8"), (Nine, "9"), (Ten, "T"), (Jack, "J"), (Queen, "Q"), (King, "K"), (Ace, "A")
-  )
 
   def parse(str: String): Either[String, Rank] =
-    mappings
-      .find(_._2 == str)
-      .map(_._1)
-      .map(Right(_))
-      .getOrElse(Left(s"Error parsing '$str', is not a valid rank"))
+    str match {
+      case "2" => Right(Two)
+      case "3" => Right(Three)
+      case "4" => Right(Four)
+      case "5" => Right(Five)
+      case "6" => Right(Six)
+      case "7" => Right(Seven)
+      case "8" => Right(Eight)
+      case "9" => Right(Nine)
+      case "T" => Right(Ten)
+      case "J" => Right(Jack)
+      case "Q" => Right(Queen)
+      case "K" => Right(King)
+      case "A" => Right(Ace)
+      case _ => Left(s"Error parsing '$str', is not a valid rank")
+    }
 
   def abbreviate(rank:Rank) : String =
-    mappings
-      .find(_._1 == rank)
-      .map(_._2)
-      .get // Rank is a sealed class, so it is totally safe call 'get' method here
+    rank match {
+      case Ten => "T"
+      case Jack => "J"
+      case Queen => "Q"
+      case King => "K"
+      case Ace => "A"
+      case rank:Rank => rank.value.toString
+    }
 }
 
 object Card {
@@ -86,5 +96,4 @@ object Card {
     }
 
   def abbreviate(card: Card): String = (Rank abbreviate card.rank) + (Suite abbreviate card.suite)
-
 }
