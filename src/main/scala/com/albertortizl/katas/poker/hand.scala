@@ -8,15 +8,15 @@ object Hand {
 
   val BlankSpace = " "
 
-  def parse(line: String): Either[String,Hand] = {
+  def parse(line: String): Either[String, Hand] = {
 
     val sequenceOfErrorsOrCards: Seq[Either[String, Card]] = line split BlankSpace map Card.parse
     val errorOrListOfCards: Either[String, List[Card]] =
       sequenceOfErrorsOrCards.foldRight(Right(Nil): Either[String, List[Card]]) {
-      (either, acc) => {
-        either.right.flatMap(card => acc.right.map(cards => card :: cards))
+        (either, acc) => {
+          either.right.flatMap(card => acc.right.map(cards => card :: cards))
+        }
       }
-    }
     errorOrListOfCards.right.map(Hand(_))
   }
 }

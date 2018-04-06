@@ -12,7 +12,7 @@ class SuiteTest extends FunSpec with Matchers with TableDrivenPropertyChecks {
     it("should parse all valid string suites to suite") {
       val suites = List("h", "d", "s", "c").map(Suite.parse)
       all(suites) should be('right)
-      suites.map(_.right.get) should contain theSameElementsInOrderAs Deck.suites
+      suites.map(_.right.get) should contain theSameElementsInOrderAs Deck.Suites
     }
 
     it("should non parse a non valid string") {
@@ -24,7 +24,7 @@ class SuiteTest extends FunSpec with Matchers with TableDrivenPropertyChecks {
   describe("abbreviate suite") {
 
     it("should abbreviate suite to a string") {
-      val abbreviations = Deck.suites map Suite.abbreviate
+      val abbreviations = Deck.Suites map Suite.abbreviate
       abbreviations should contain theSameElementsInOrderAs List("h", "d", "s", "c")
     }
   }

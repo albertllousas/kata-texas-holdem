@@ -14,7 +14,7 @@ class RankTest extends FunSpec with Matchers with TableDrivenPropertyChecks {
     it("should parse all valid string ranks to rank") {
       val ranks = validStringRanks.map(Rank.parse)
       all(ranks) should be('right)
-      ranks.map(_.right.get) should contain theSameElementsInOrderAs Deck.ranks
+      ranks.map(_.right.get) should contain theSameElementsInOrderAs Deck.Ranks
     }
 
     it("should non parse a non valid string") {
@@ -26,7 +26,7 @@ class RankTest extends FunSpec with Matchers with TableDrivenPropertyChecks {
   describe("abbreviate rank") {
 
     it("should abbreviate rank to a string") {
-      val abbreviations = Deck.ranks.map(Rank.abbreviate)
+      val abbreviations = Deck.Ranks.map(Rank.abbreviate)
       abbreviations should contain theSameElementsInOrderAs validStringRanks
     }
   }

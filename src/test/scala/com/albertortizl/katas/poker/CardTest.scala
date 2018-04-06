@@ -30,7 +30,7 @@ class CardTest extends FunSpec with Matchers with TableDrivenPropertyChecks {
   describe("abbreviate card") {
 
     it("should abbreviate card to a string") {
-      val abbreviations = Deck.cards.map(Card.abbreviate)
+      val abbreviations = Deck.Cards.map(Card.abbreviate)
       abbreviations should contain theSameElementsInOrderAs validStringCards
     }
   }
