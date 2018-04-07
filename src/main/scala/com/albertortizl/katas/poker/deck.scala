@@ -25,13 +25,18 @@ case object Ace extends Rank(14)
 
 case class Card(rank: Rank, suite: Suite)
 
+trait Abbreviable[A] {
+  def parse(abbreviation: String): Either[String, A]
+  def abbreviate(element:A) : String
+}
+
 object Deck {
   val Suites: List[Suite] = List(Hearts, Diamonds, Spades, Clubs)
   val Ranks: List[Rank] = List(Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace)
   val Cards: List[Card] = for (rank <- Ranks; suite <- Suites) yield Card(rank, suite)
 }
 
-object Suite {
+object Suite extends Abbreviable[Suite]{
 
   private val (h, d, s, c) = ("h", "d", "s", "c")
 
@@ -53,7 +58,7 @@ object Suite {
     }
 }
 
-object Rank {
+object Rank extends Abbreviable[Rank]{
 
   def parse(str: String): Either[String, Rank] =
     str match {
@@ -84,7 +89,7 @@ object Rank {
     }
 }
 
-object Card {
+object Card extends Abbreviable[Card] {
 
   def parse(str: String): Either[String, Card] =
     str.length match {
