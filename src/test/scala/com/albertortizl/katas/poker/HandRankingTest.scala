@@ -60,10 +60,19 @@ class HandRankingTest extends FunSpec with Matchers {
       val hand = Hand(List(Ten of Clubs, Six of Clubs))
       val thrown = the [IllegalArgumentException] thrownBy HandRanking.evaluate(hand)
       thrown.getMessage should equal(
-        "requirement failed: 'Hand(List(Card(Ten,Clubs), Card(Six,Clubs)))' can not be ranked, there are not 5 cards"
+        "requirement failed: 'Hand(List(Card(Ten,Clubs), Card(Six,Clubs)))' can not be ranked, must be exactly 5 cards"
       )
     }
 
+  }
+
+  describe("choosing the best five-card combination") {
+    it("should choose the best combination of five cards in all possible combinations of five cards") {
+      val hand = Hand(
+        List(Ten of Clubs, Ten of Clubs, Ten of Hearts, Three of Diamonds, Ace of Spades, Ace of Spades, Ten of Hearts)
+      )
+      HandRanking bestFiveCardCombination hand should be (FourOfAKind)
+    }
   }
 
 }

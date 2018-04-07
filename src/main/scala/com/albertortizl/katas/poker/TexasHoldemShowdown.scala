@@ -8,6 +8,12 @@ class TexasHoldemShowdown(parseInputLine: (String) => Either[String,Hand] = Hand
 
     val showdown: Either[String, List[Hand]] = hands.map(parseInputLine).sequence
 
+    showdown.right.map {
+      hands =>
+        val handRankings = hands.map(HandRanking.bestFiveCardCombination)
+        handRankings
+    }
+
     Right(List(""))
   }
 

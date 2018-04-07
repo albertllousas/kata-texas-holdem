@@ -1,23 +1,35 @@
 package com.albertortizl.katas.poker
 
-sealed abstract class HandRanking
-object RoyalFlush extends HandRanking
-object StraightFlush extends HandRanking
-object FourOfAKind extends HandRanking
-object FullHouse extends HandRanking
-object Flush extends HandRanking
-object Straight extends HandRanking
-object ThreeOfAKind extends HandRanking
-object TwoPair extends HandRanking
-object OnePair extends HandRanking
-object HighCard extends HandRanking
+sealed abstract class HandRanking(val score: Int)
+object RoyalFlush extends HandRanking(10)
+object StraightFlush extends HandRanking(9)
+object FourOfAKind extends HandRanking(8)
+object FullHouse extends HandRanking(7)
+object Flush extends HandRanking(6)
+object Straight extends HandRanking(5)
+object ThreeOfAKind extends HandRanking(4)
+object TwoPair extends HandRanking(3)
+object OnePair extends HandRanking(2)
+object HighCard extends HandRanking(1)
 
 
 object HandRanking {
 
+  def bestFiveCardCombination(hand: Hand): HandRanking = {
+    require(hand.cards.lengthCompare(7) == 0,
+      s"Must be exactly 7 cards to find the best 5 cards combination for '$hand'")
+    hand
+      .cards
+      .combinations(5)
+      .map(Hand(_))
+      .map(evaluate)
+      .maxBy(_.score)
+  }
+
+
   def evaluate(hand: Hand): HandRanking = {
 
-    require(hand.cards.lengthCompare(5) == 0,s"'$hand' can not be ranked, there are not 5 cards")
+    require(hand.cards.lengthCompare(5) == 0,s"'$hand' can not be ranked, must be exactly 5 cards")
 
     if (hand.isSameSuit && hand.isConsecutive && hand.hasHighCard(Ace)) RoyalFlush
     else if (hand.isSameSuit && hand.isConsecutive) StraightFlush
