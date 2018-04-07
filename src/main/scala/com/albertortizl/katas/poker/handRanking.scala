@@ -16,30 +16,44 @@ object HighCard extends HandRanking
 object HandRanking {
 
   def evaluate(hand: Hand): HandRanking = {
+    require(hand.cards.lengthCompare(5) == 0,s"'$hand' can not be ranked, there are not 5 cards")
     if (hand.isSameSuit && hand.isConsecutive && hand.hasHighCard(Ace)) RoyalFlush
     else if (hand.isSameSuit && hand.isConsecutive) StraightFlush
     else if (hand.hasGroupOf(4)) FourOfAKind
+    else if (hand.hasGroupsOf(3)(2)) FullHouse
+    else if (hand.isSameSuit) Flush
+    else if (hand.isConsecutive) Straight
+    else if (hand.hasGroupOf(3)) ThreeOfAKind
+    else if (hand.hasGroupsOf(2)(2)) TwoPair
+    else if (hand.hasGroupOf(2)) OnePair
     else HighCard
   }
 
   implicit class RankableHand(val hand: Hand) extends AnyVal {
     def isSameSuit: Boolean = hand.cards.map(_.suite).toSet.size == 1
+
     def isConsecutive: Boolean = {
-      val sortedCards = hand.cards.sortWith((c1,c2)=> c1.rank.value < c2.rank.value)
-      sortedCards.last.rank.value - sortedCards.head.rank.value == sortedCards.length -1
+      val sortedCards = hand.cards.sortWith((c1, c2) => c1.rank.value < c2.rank.value)
+      sortedCards.last.rank.value - sortedCards.head.rank.value == sortedCards.length - 1
     }
-    def hasHighCard(rank:Rank):Boolean = hand.cards.maxBy(_.rank.value).rank == rank
-    def hasGroupOf(size:Int):Boolean = hand.cards.map(_.rank).groupBy(identity).values.exists(_.lengthCompare(size) == 0)
+
+    def hasHighCard(rank: Rank): Boolean = hand.cards.maxBy(_.rank.value).rank == rank
+
+    def hasGroupOf(size: Int): Boolean = groupByRank(hand.cards).values.exists(_.lengthCompare(size) == 0)
+
+    def hasGroupsOf(firstGroupSize: Int)(secondGroupSize: Int): Boolean = {
+      val firstGroupRank = groupByRank(hand.cards).mapValues(_.size).find(_._2 == firstGroupSize).map(_._1)
+      firstGroupRank.exists(rank => {
+        val cardsWithoutFirstGroup = hand.cards.filter(_.rank != rank)
+        groupByRank(cardsWithoutFirstGroup).values.exists(_.lengthCompare(secondGroupSize) == 0)
+      })
+    }
+
+    private def groupByRank(cards: List[Card]): Map[Rank, List[Rank]] = cards.map(_.rank).groupBy(identity)
   }
 
 }
-//  private def fff(implicit cards:List[(Rank,Suite)]):Boolean = true
-//
-//  private def containsGroupOfSize hasGroupOf[A](repetitions:Int)(elements: A*): Boolean =
-//    elements.groupBy(identity).values.exists(group => group.lengthCompare(repetitions) == 0)
-//
-//  private def isConsecutive(r1: Rank, r2: Rank, r3: Rank, r4: Rank, r5: Rank): Boolean =
-//    rankIndex(r5) - rankIndex(r1) == 4
+
 
 
 
