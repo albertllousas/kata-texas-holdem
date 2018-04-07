@@ -16,7 +16,9 @@ object HighCard extends HandRanking
 object HandRanking {
 
   def evaluate(hand: Hand): HandRanking = {
+
     require(hand.cards.lengthCompare(5) == 0,s"'$hand' can not be ranked, there are not 5 cards")
+
     if (hand.isSameSuit && hand.isConsecutive && hand.hasHighCard(Ace)) RoyalFlush
     else if (hand.isSameSuit && hand.isConsecutive) StraightFlush
     else if (hand.hasGroupOf(4)) FourOfAKind
@@ -29,11 +31,14 @@ object HandRanking {
     else HighCard
   }
 
+  private val compareRank: (Card, Card) => Boolean = (c1, c2) => c1.rank.value < c2.rank.value
+
   implicit class RankableHand(val hand: Hand) extends AnyVal {
+
     def isSameSuit: Boolean = hand.cards.map(_.suite).toSet.size == 1
 
     def isConsecutive: Boolean = {
-      val sortedCards = hand.cards.sortWith((c1, c2) => c1.rank.value < c2.rank.value)
+      val sortedCards = hand.cards.sortWith(compareRank)
       sortedCards.last.rank.value - sortedCards.head.rank.value == sortedCards.length - 1
     }
 
