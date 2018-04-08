@@ -15,15 +15,18 @@ object HighCard extends HandRanking(1)
 
 object HandRanking {
 
-  def bestFiveCardCombination(hand: Hand): HandRanking = {
+  def bestFiveCardsCombination(hand: Hand): HandRanking = {
     require(hand.cards.lengthCompare(7) == 0,
       s"Must be exactly 7 cards to find the best 5 cards combination for '$hand'")
+    // TODO: draws
+
     hand
       .cards
       .combinations(5)
       .map(Hand(_))
       .map(evaluate)
       .maxBy(_.score)
+
   }
 
 

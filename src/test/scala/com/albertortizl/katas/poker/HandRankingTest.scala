@@ -71,7 +71,7 @@ class HandRankingTest extends FunSpec with Matchers {
       val hand = Hand(
         List(Ten of Clubs, Ten of Clubs, Ten of Hearts, Three of Diamonds, Ace of Spades, Ace of Spades, Ten of Hearts)
       )
-      HandRanking bestFiveCardCombination hand should be (FourOfAKind)
+      HandRanking bestFiveCardsCombination hand should be (FourOfAKind)
     }
   }
 
