@@ -1,6 +1,6 @@
 package com.albertortizl.katas.poker
 
-object EitherSequence {
+object implicits {
 
   implicit class SequenceOfEither[A, B](val seq: List[Either[B, A]]) extends AnyVal {
 

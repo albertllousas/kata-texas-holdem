@@ -38,23 +38,22 @@ object Deck {
 
 object Suite extends Abbreviable[Suite]{
 
-  private val (h, d, s, c) = ("h", "d", "s", "c")
 
   def parse(str: String): Either[String, Suite] =
     str match {
-      case `h` => Right(Hearts)
-      case `d` => Right(Diamonds)
-      case `s` => Right(Spades)
-      case `c` => Right(Clubs)
+      case "h" => Right(Hearts)
+      case "d" => Right(Diamonds)
+      case "s" => Right(Spades)
+      case "c" => Right(Clubs)
       case  _ => Left(s"Error parsing '$str', is not a valid suite")
     }
 
   def abbreviate(suite:Suite) : String =
     suite match {
-      case Hearts => h
-      case Diamonds => d
-      case Spades => s
-      case Clubs => c
+      case Hearts => "h"
+      case Diamonds => "d"
+      case Spades => "s"
+      case Clubs => "c"
     }
 }
 

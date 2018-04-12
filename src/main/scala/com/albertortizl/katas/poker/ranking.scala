@@ -12,29 +12,29 @@ object TwoPair extends HandRanking(3)
 object OnePair extends HandRanking(2)
 object HighCard extends HandRanking(1)
 
+object Ranking {
 
-object HandRanking {
+  def score(ranking:HandRanking,hand: Hand): Int = ranking.score + tiebreakerValue(hand)
 
-  def bestFiveCardsCombination(hand: Hand): HandRanking = {
-    require(hand.cards.lengthCompare(7) == 0,
-      s"Must be exactly 7 cards to find the best 5 cards combination for '$hand'")
-    // TODO: draws
+  private def tiebreakerValue(hand: Hand): Int =
+    hand.first.rank.value + hand.second.rank.value + hand.third.rank.value + hand.fourth.rank.value + hand.fifth.rank.value
 
-    hand
-      .cards
+  //  def score(ranked: Ranked):Int = totalScore(ranked.handRanking, ranked.bestFiveCards)
+
+  def bestFiveCardsCombination(cards: List[Card]): (HandRanking, Hand) = {
+
+    require(cards.lengthCompare(5) >= 0, s"'$cards' can not be ranked, must 5 or more cards")
+
+    cards
       .combinations(5)
-      .map(Hand(_))
-      .map(evaluate)
-      .maxBy(_.score)
-
+      .map { case List(c1, c2, c3, c4, c5) => Hand(c1, c2, c3, c4, c5) }
+      .map(hand => (evaluate(hand), hand))
+      .maxBy(ranking => score(ranking._1, ranking._2))
   }
-
 
   def evaluate(hand: Hand): HandRanking = {
 
-    require(hand.cards.lengthCompare(5) == 0,s"'$hand' can not be ranked, must be exactly 5 cards")
-
-    if (hand.isSameSuit && hand.isConsecutive && hand.hasHighCard(Ace)) RoyalFlush
+    if (hand.isSameSuit && hand.isConsecutive && hand.isHighCard(Ace)) RoyalFlush
     else if (hand.isSameSuit && hand.isConsecutive) StraightFlush
     else if (hand.hasGroupOf(4)) FourOfAKind
     else if (hand.hasGroupsOf(3)(2)) FullHouse
@@ -44,36 +44,38 @@ object HandRanking {
     else if (hand.hasGroupsOf(2)(2)) TwoPair
     else if (hand.hasGroupOf(2)) OnePair
     else HighCard
+
   }
 
   private val compareRank: (Card, Card) => Boolean = (c1, c2) => c1.rank.value < c2.rank.value
 
-  implicit class RankableHand(val hand: Hand) extends AnyVal {
+  implicit class Rankable(val hand: Hand) extends AnyVal {
 
-    def isSameSuit: Boolean = hand.cards.map(_.suite).toSet.size == 1
+    def cards = hand.first :: hand.second :: hand.third :: hand.fourth :: hand.fifth :: Nil
+
+    def isSameSuit: Boolean = cards.map(_.suite).toSet.size == 1
 
     def isConsecutive: Boolean = {
-      val sortedCards = hand.cards.sortWith(compareRank)
+      val sortedCards = cards.sortWith(compareRank)
       sortedCards.last.rank.value - sortedCards.head.rank.value == sortedCards.length - 1
     }
 
-    def hasHighCard(rank: Rank): Boolean = hand.cards.maxBy(_.rank.value).rank == rank
+    def isHighCard(rank: Rank): Boolean = cards.maxBy(_.rank.value).rank == rank
 
-    def hasGroupOf(size: Int): Boolean = groupByRank(hand.cards).values.exists(_.lengthCompare(size) == 0)
+    def hasGroupOf(size: Int): Boolean = {
+      rankRepetitions(cards).values.exists(_ == size)
+    }
 
     def hasGroupsOf(firstGroupSize: Int)(secondGroupSize: Int): Boolean = {
-      val firstGroupRank = groupByRank(hand.cards).mapValues(_.size).find(_._2 == firstGroupSize).map(_._1)
+      val firstGroupRank = rankRepetitions(cards).find(_._2 == firstGroupSize).map(_._1)
       firstGroupRank.exists(rank => {
-        val cardsWithoutFirstGroup = hand.cards.filter(_.rank != rank)
-        groupByRank(cardsWithoutFirstGroup).values.exists(_.lengthCompare(secondGroupSize) == 0)
+        val cardsWithoutFirstGroup = cards.filter(_.rank != rank)
+        rankRepetitions(cardsWithoutFirstGroup).values.exists(_ == secondGroupSize)
       })
     }
 
-    private def groupByRank(cards: List[Card]): Map[Rank, List[Rank]] = cards.map(_.rank).groupBy(identity)
+    private def rankRepetitions(cards: List[Card]): Map[Rank, Int] =
+      cards.map(_.rank).groupBy(identity).mapValues(_.size)
   }
 
 }
-
-
-
-

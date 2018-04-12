@@ -74,17 +74,6 @@ This is the ranking of the possible poker hands:
 </p>
 
 
-If two of more players share the same kind of hand, the best of them is evaluated according to the rank of the cards (Ace is the highest card, 2 is the lowest). If they have still the same combination, the remaining cards are evaluated in search of the high card.
-
-If two of more players share the same kind of hand, the best of them is evaluated according to the rank of the cards (Ace is the highest card, 2 is the lowest). If they have still the same combination, the remaining cards are evaluated in search of the high card.
-
-Betting:
-
-The five community cards are shown in three phases named **flop** (3 cards are shown), **turn** (the fourth card is shown) and **river** (the last card is shown).
-
-Four betting rounds are done during each dealing: the preflop (before showing any community card), and another round every time any community card is shown (flop, turn and river).
-
-
 ### Out of scope / to improve
 
 - Check card repetitions
