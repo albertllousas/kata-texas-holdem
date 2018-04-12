@@ -1,25 +1,25 @@
 package com.albertortizl.katas.poker
 
 sealed abstract class HandRanking(val score: Int)
-object RoyalFlush extends HandRanking(10)
-object StraightFlush extends HandRanking(9)
-object FourOfAKind extends HandRanking(8)
-object FullHouse extends HandRanking(7)
-object Flush extends HandRanking(6)
-object Straight extends HandRanking(5)
-object ThreeOfAKind extends HandRanking(4)
-object TwoPair extends HandRanking(3)
-object OnePair extends HandRanking(2)
-object HighCard extends HandRanking(1)
+case object RoyalFlush extends HandRanking(10)
+case object StraightFlush extends HandRanking(9)
+case object FourOfAKind extends HandRanking(8)
+case object FullHouse extends HandRanking(7)
+case object Flush extends HandRanking(6)
+case object Straight extends HandRanking(5)
+case object ThreeOfAKind extends HandRanking(4)
+case object TwoPair extends HandRanking(3)
+case object OnePair extends HandRanking(2)
+case object HighCard extends HandRanking(1)
 
 object Ranking {
 
-  def score(ranking:HandRanking,hand: Hand): Int = ranking.score + tiebreakerValue(hand)
+  val rankPriority = 100
+
+  private def score(ranking: HandRanking, hand: Hand): Int = (ranking.score * rankPriority) + tiebreakerValue(hand)
 
   private def tiebreakerValue(hand: Hand): Int =
     hand.first.rank.value + hand.second.rank.value + hand.third.rank.value + hand.fourth.rank.value + hand.fifth.rank.value
-
-  //  def score(ranked: Ranked):Int = totalScore(ranked.handRanking, ranked.bestFiveCards)
 
   def bestFiveCardsCombination(cards: List[Card]): (HandRanking, Hand) = {
 

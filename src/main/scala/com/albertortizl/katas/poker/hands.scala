@@ -32,3 +32,7 @@ object PlayerCards {
   }
 }
 
+object HandState {
+  def toLine(state:HandState):String = ""
+}
+

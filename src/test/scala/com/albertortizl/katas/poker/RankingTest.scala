@@ -58,25 +58,32 @@ class RankingTest extends FunSpec with Matchers {
 
   }
 
-
-//  tests score
+  describe("scoring a hand with its ranking")
 
   describe("choosing the best five-card combination") {
 
-//    error cuando menos de tal
-
-    it("should choose the best combination of five cards when you have two possible full houses") {
+    it("should choose the best combination of five cards when there are two possible full houses") {
       val sevenCards =
-        List(Ten of Clubs, Ten of Diamonds,Ten of Hearts, Three of Diamonds, Ace of Spades, Ace of Spades, Ace of Spades)
+        List(Ten of Clubs, Ten of Diamonds,Ten of Hearts, Three of Diamonds, Ace of Spades, Ace of Clubs, Ace of Diamonds)
 
-      Ranking bestFiveCardsCombination sevenCards should be (FourOfAKind, (Ten of Clubs, Ten of Diamonds, Ten of Hearts, Three of Diamonds, Ten of Spades))
+      Ranking bestFiveCardsCombination sevenCards should be (
+        FullHouse, Hand(Ten of Clubs, Ten of Diamonds, Ace of Spades, Ace of Clubs, Ace of Diamonds)
+      )
     }
 
-    it("should choose the best combination of five cards when you have three different possible straights") {
+    it("should choose the best combination of five cards when there are two different possible straights") {
       val sevenCards =
-        List(Ten of Clubs, Ten of Diamonds, Ten of Hearts, Three of Diamonds, Ace of Spades, Ace of Spades, Ace of Spades)
+        List(Six of Diamonds, Five of Hearts, Eight of Diamonds, Seven of Spades, Three of Spades, Four of Spades)
 
-      Ranking bestFiveCardsCombination sevenCards should be (FourOfAKind, (Ten of Clubs, Ten of Diamonds, Ten of Hearts, Three of Diamonds, Ten of Spades))
+      Ranking bestFiveCardsCombination sevenCards should be (
+        Straight, Hand(Six of Diamonds, Five of Hearts, Eight of Diamonds, Seven of Spades, Four of Spades)
+      )
+    }
+
+    it("should fail trying choose the best combination of five cards when there are less than five cards") {
+      val cards = List(Ten of Clubs, Six of Clubs)
+      val thrown = the [IllegalArgumentException] thrownBy Ranking.bestFiveCardsCombination(cards)
+      thrown.getMessage should equal ("requirement failed: 'List(Card(Ten,Clubs), Card(Six,Clubs))' can not be ranked, must 5 or more cards")
     }
   }
 

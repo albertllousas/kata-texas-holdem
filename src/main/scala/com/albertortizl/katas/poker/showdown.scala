@@ -1,55 +1,45 @@
 package com.albertortizl.katas.poker
 
-import com.albertortizl.katas.poker.ShowdownStages.{initialState, parseFolds,determineWinners, rank}
+import com.albertortizl.katas.poker.ShowdownStages.{determineWinners, evaluateRankings, parseFolds}
 import com.albertortizl.katas.poker.implicits._
 
-
-sealed trait ShowdownOutcome
-case class Fold(playerCards:Folded) extends ShowdownOutcome
-case class Win(playerCards:Finalist) extends ShowdownOutcome
-case class Loss(playerCards:Finalist) extends ShowdownOutcome
-
-
-class Showdown(parseInputLine: (String) => Either[String, PlayerCards] = PlayerCards.parse) {
+class Showdown(parseInputLine: (String) => Either[String, PlayerCards] = PlayerCards.parse,
+               toLine: (HandState) => String = HandState.toLine) {
 
   def evaluate(lines: List[String]): Either[String, List[String]] = {
 
     lines
       .map(parseInputLine)
       .sequence
-      .map(initialState(_))
-      .map(parseFolds(_))
-      .map(rank(_))
+      .map(_ map Alive)
+      .map(parseFolds)
+      .map(evaluateRankings(_))
       .map(determineWinners(_))
-    //      .map(Hand.toLine)
-
-    Right(List(""))
+      .map(_ map toLine)
   }
 
 }
 
-
 object ShowdownStages {
 
-  def initialState(playerCards: List[PlayerCards]):List[Alive] = List()
+  def parseFolds(states: List[HandState]): List[HandState] =
+    states.map {
+      case Alive(pc@PlayerCards(_, communityCards)) if communityCards.lengthCompare(5) < 0 => Folded(pc)
+      case state => state
+    }
 
-  def parseFolds(states: List[HandState]):List[HandState] = List()
+  def evaluateRankings(
+                        states: List[HandState],
+                        bestFiveCardsCombination: (List[Card]) => (HandRanking, Hand) = Ranking.bestFiveCardsCombination
+                      ): List[HandState] =
+    states.map {
+      case Alive(pc@PlayerCards(HoleCards(p1, p2), communityCards)) =>
+        val (handRanking, hand) = bestFiveCardsCombination(p1 :: p2 :: communityCards)
+        Finalist(pc, handRanking, hand)
+      case state => state
+    }
 
-  def rank(
-            states: List[HandState],
-            bestFiveCardsCombination: (List[Card]) => (HandRanking, Hand) = Ranking.bestFiveCardsCombination
-          ): List[Finalist] = {
-//    hands
-//      .map(hand => if (hand.communityCards.lengthCompare(5) < 0) hand.fold() else hand)
-//      .map {
-//        case h: Folded => h
-//        case h: Hand =>
-//          val ranking = bestFiveCardsCombination(h)
-//          h.rankWith(ranking._1, ranking._2)
-    List()
-      }
-
-  def determineWinners(hands: List[Finalist], score: (HandRanking,Hand)=> Int = Ranking.score ): List[ShowdownOutcome] = {
+  def determineWinners(states: List[HandState], score: (HandRanking, Hand) => Int = Ranking.score): List[HandState] = {
     List()
   }
 
