@@ -3,7 +3,7 @@ package com.albertortizl.katas.poker
 import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
 
 
-class ShowdownSpec extends FeatureSpec with GivenWhenThen with Matchers{
+class ShowdownUserStoriesSpec extends FeatureSpec with GivenWhenThen with Matchers{
 
 
   val showdown = new Showdown()

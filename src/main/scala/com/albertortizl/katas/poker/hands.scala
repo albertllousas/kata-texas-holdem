@@ -4,14 +4,14 @@ import com.albertortizl.katas.poker.implicits._
 
 sealed trait CardSet
 case class HoleCards(first: Card, second: Card) extends CardSet
-case class Hand(first: Card, second: Card, third: Card, fourth: Card, fifth: Card) extends CardSet
+case class Hand(cards: List[Card], ranking: HandRanking) extends CardSet
 case class PlayerCards(holeCards: HoleCards, communityCards: List[Card]) extends CardSet
 
 sealed trait HandState
 case class Alive(playerCards: PlayerCards) extends HandState
 case class Folded(playerCards: PlayerCards) extends HandState
-case class Finalist private(playerCards: PlayerCards, handRanking: HandRanking, hand: Hand) extends HandState
-case class Winner private(playerCards: PlayerCards, handRanking: HandRanking, hand: Hand) extends HandState
+case class Finalist private(playerCards: PlayerCards, hand: Hand) extends HandState
+case class Winner private(playerCards: PlayerCards, hand: Hand) extends HandState
 
 object PlayerCards {
 

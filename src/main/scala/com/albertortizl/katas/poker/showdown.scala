@@ -1,10 +1,12 @@
 package com.albertortizl.katas.poker
 
-import com.albertortizl.katas.poker.ShowdownStages.{determineWinners, evaluateRankings, parseFolds}
+import com.albertortizl.katas.poker.ShowdownStages.{determineWinners, parseFolds}
 import com.albertortizl.katas.poker.implicits._
 
 class Showdown(parseInputLine: (String) => Either[String, PlayerCards] = PlayerCards.parse,
                toLine: (HandState) => String = HandState.toLine) {
+
+  private val evaluateRankings: List[HandState] => List[HandState] = ShowdownStages.evaluateRankings(_, Ranking.bestHand)
 
   def evaluate(lines: List[String]): Either[String, List[String]] = {
 
@@ -13,8 +15,8 @@ class Showdown(parseInputLine: (String) => Either[String, PlayerCards] = PlayerC
       .sequence
       .map(_ map Alive)
       .map(parseFolds)
-      .map(evaluateRankings(_))
-      .map(determineWinners(_))
+      .map(evaluateRankings)
+      .map(determineWinners)
       .map(_ map toLine)
   }
 
@@ -28,18 +30,14 @@ object ShowdownStages {
       case state => state
     }
 
-  def evaluateRankings(
-                        states: List[HandState],
-                        bestFiveCardsCombination: (List[Card]) => (HandRanking, Hand) = Ranking.bestFiveCardsCombination
-                      ): List[HandState] =
+  def evaluateRankings(states: List[HandState], bestHand: (List[Card]) => Hand): List[HandState] =
     states.map {
       case Alive(pc@PlayerCards(HoleCards(p1, p2), communityCards)) =>
-        val (handRanking, hand) = bestFiveCardsCombination(p1 :: p2 :: communityCards)
-        Finalist(pc, handRanking, hand)
+        Finalist(pc, bestHand(p1 :: p2 :: communityCards))
       case state => state
     }
 
-  def determineWinners(states: List[HandState], score: (HandRanking, Hand) => Int = Ranking.score): List[HandState] = {
+  def determineWinners(states: List[HandState]): List[HandState] = {
     List()
   }
 
