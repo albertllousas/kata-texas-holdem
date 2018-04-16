@@ -1,6 +1,5 @@
 package com.albertortizl.katas.poker
 
-import com.albertortizl.katas.HandComparator
 import org.scalatest.{FunSpec, Matchers}
 
 class HandComparatorTest extends FunSpec with Matchers {

@@ -3,7 +3,7 @@ package com.albertortizl.katas.poker
 import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
 
 
-class ShowdownUserStoriesSpec extends FeatureSpec with GivenWhenThen with Matchers{
+class ShowdownSpec extends FeatureSpec with GivenWhenThen with Matchers{
 
 
   val showdown = new Showdown()
@@ -16,7 +16,7 @@ class ShowdownUserStoriesSpec extends FeatureSpec with GivenWhenThen with Matche
 
     scenario("calculate ranking of a poker hands") {
 
-      Given("a hands of poker")
+      Given("a round of poker")
       val hands = List(
         "Kc 9s Ks Kd 9d 3c 6d",
         "9c Ah Ks Kd 9d 3c 6d",
@@ -29,7 +29,7 @@ class ShowdownUserStoriesSpec extends FeatureSpec with GivenWhenThen with Matche
       When("showdown is evaluated")
       val result = showdown evaluate hands
 
-      Then("hands with seven cards should be ranked")
+      Then("hands not folded (with seven cards) should be ranked")
 
 //      result.isRight shouldBe (true)
     }
@@ -51,7 +51,7 @@ class ShowdownUserStoriesSpec extends FeatureSpec with GivenWhenThen with Matche
       pending
     }
 
-    scenario("calculate the winners when there is a draw") {
+    scenario("calculate the winners when there is a tie") {
 
       Given("a poker hands evaluator")
       When("evaluator is called with a round of hands with a draw")
