@@ -1,6 +1,9 @@
 package com.albertortizl.katas.poker
 
-import scala.annotation.tailrec
+
+import scala.util.Sorting
+
+case class Hand(cards: List[Card], ranking: HandRanking)
 
 sealed trait HandState
 case class Folded(player: Player) extends HandState
@@ -9,22 +12,43 @@ case class Winner(player: Player, hand: Hand) extends HandState
 
 object HandState {
 
-  @tailrec
-  def isWinner(finalist:Finalist, competitors: List[Finalist]):Boolean = {
-
-  }
-
   def toLine(handState:HandState):String =
     handState match {
       case w:Winner => ""
       case f:Finalist => ""
       case f:Folded => ""
     }
-
 }
 
+object Hand {
+
+  import com.albertortizl.katas.poker.HandComparator._
+  private val Win = true
+  private val Loss = false
+
+  def isWinner(hand: Hand, opponents: List[Hand]): Boolean = {
+
+    val opponentHands = opponents.toArray
+    Sorting.quickSort(opponentHands)(HandComparator)
+    val opponentsHandsDesc: Array[Hand] = opponentHands.reverse
+
+    val compareResult = opponentsHandsDesc
+      .headOption
+      .map(opponentsBestHand => compare(hand, opponentsBestHand))
+      .getOrElse(FirstIsGreater)
+
+    compareResult match {
+      case FirstIsGreater | BothAreEqual => Win
+      case FirstIsLess => Loss
+    }
+  }
+}
 
 object HandComparator extends Ordering[Hand] {
+
+  val FirstIsLess: Int = -1
+  val BothAreEqual: Int = 0
+  val FirstIsGreater: Int = 1
   /**
     * Following comparators conventions:
     * A negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
@@ -38,7 +62,7 @@ object HandComparator extends Ordering[Hand] {
 
   private def compareTie(a: Hand, b: Hand): Int = {
     a.ranking match {
-      case RoyalFlush => 0
+      case RoyalFlush => BothAreEqual
       case StraightFlush | Straight => topCard(a.cards) compare topCard(b.cards)
       case FullHouse => strengthOfKind(a.cards) compare strengthOfKind(b.cards)
       case _ =>

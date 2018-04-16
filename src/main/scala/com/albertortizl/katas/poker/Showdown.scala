@@ -6,7 +6,7 @@ class Showdown(parseLines: (String) => Either[String, Player] = Player.parse,
                toLine: (HandState) => String = HandState.toLine) {
 
   private val bestHand: List[Card] => Hand = Ranking.bestHand
-  private val isWinner: (Finalist, List[Finalist]) => Boolean = HandState.isWinner
+  private val isWinner: (Hand, List[Hand]) => Boolean = Hand.isWinner
 
   def evaluate(lines: List[String]): Either[String, List[String]] = {
 
@@ -22,13 +22,14 @@ class Showdown(parseLines: (String) => Either[String, Player] = Player.parse,
     val hands: List[HandState] = players.map(p => if (p.fold) Folded(p) else Finalist(p, bestHand(p.allCards)))
 
     hands.map {
-      case finalist@Finalist(pc, hand) if isWinner(finalist, opponents(finalist, hands)) => Winner(pc, hand)
+      case finalist@Finalist(pc, hand) if isWinner(finalist.hand, opponents(finalist, hands)) => Winner(pc, hand)
+      case finalist: Finalist => finalist
       case folded: Folded => folded
     }
   }
 
-  private def opponents(finalist: Finalist, hands: List[HandState]): List[Finalist] =
-    hands.collect { case opponent: Finalist if opponent != finalist => opponent }
+  private def opponents(finalist: Finalist, hands: List[HandState]): List[Hand] =
+    hands.collect { case opponent: Finalist if opponent != finalist => opponent.hand }
 
 }
 

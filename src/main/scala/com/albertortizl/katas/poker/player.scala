@@ -3,7 +3,6 @@ package com.albertortizl.katas.poker
 import com.albertortizl.katas.poker.implicits._
 
 case class HoleCards(first: Card, second: Card)
-case class Hand(cards: List[Card], ranking: HandRanking)
 case class Player(holeCards: HoleCards, communityCards: List[Card], fold:Boolean) {
   def allCards = holeCards.first :: holeCards.second :: communityCards
 }
