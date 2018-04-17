@@ -5,6 +5,8 @@ import org.scalatest.{FunSpec, Matchers}
 
 class HandTest extends FunSpec with Matchers {
 
+  implicit val ordering: Ordering[Hand] = HandComparator
+
   describe("determine if a hand is a winner") {
 
     it("should win if there is no opponents") {

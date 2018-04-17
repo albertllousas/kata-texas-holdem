@@ -1,6 +1,8 @@
 package com.albertortizl.katas.poker
 
-sealed abstract class HandRanking(val value: Int)
+sealed abstract class HandRanking(val value: Int) {
+  def toReadableString = getClass.getSimpleName
+}
 case object RoyalFlush extends HandRanking(10)
 case object StraightFlush extends HandRanking(9)
 case object FourOfAKind extends HandRanking(8)
@@ -17,17 +19,15 @@ object Ranking {
 
   private val compareRank: (Card, Card) => Boolean = (c1, c2) => c1.rank.value < c2.rank.value
 
-  def bestHand(cards: List[Card]): Hand = {
+  def bestHand(cards: List[Card])(implicit ordering: Ordering[Hand]): Hand = {
 
     require(cards.lengthCompare(5) >= 0, s"Best hand on '$cards' can not be calculated, at least 5 cards are required")
 
     cards
       .combinations(5)
       .map(fiveCards => Hand(fiveCards, evaluate(fiveCards)))
-      .maxBy(sumValues)
+      .max(ordering)
   }
-
-  private def sumValues(hand: Hand): Int = hand.ranking.value + hand.cards.map(_.rank.value).sum
 
   def evaluate(cards: List[Card]): HandRanking = {
 

@@ -14,27 +14,29 @@ object HandState {
 
   def toLine(handState:HandState):String =
     handState match {
-      case w:Winner => ""
-      case f:Finalist => ""
-      case f:Folded => ""
+      case w:Winner => s"${Player.abbreviate(w.player)} ${w.hand.ranking.toReadableString} (winner)"
+      case f:Finalist => s"${Player.abbreviate(f.player)} ${f.hand.ranking.toReadableString}"
+      case f:Folded => s"${Player.abbreviate(f.player)}"
     }
 }
 
 object Hand {
 
-  import com.albertortizl.katas.poker.HandComparator._
   private val Win = true
   private val Loss = false
+  val FirstIsLess: Int = -1
+  val BothAreEqual: Int = 0
+  val FirstIsGreater: Int = 1
 
-  def isWinner(hand: Hand, opponents: List[Hand]): Boolean = {
+  def isWinner(hand: Hand, opponents: List[Hand])(implicit ordering:Ordering[Hand]):  Boolean = {
 
     val opponentHands = opponents.toArray
-    Sorting.quickSort(opponentHands)(HandComparator)
+    Sorting.quickSort(opponentHands)(ordering)
     val opponentsHandsDesc: Array[Hand] = opponentHands.reverse
 
     val compareResult = opponentsHandsDesc
       .headOption
-      .map(opponentsBestHand => compare(hand, opponentsBestHand))
+      .map(opponentsBestHand => ordering.compare(hand, opponentsBestHand))
       .getOrElse(FirstIsGreater)
 
     compareResult match {
@@ -46,9 +48,7 @@ object Hand {
 
 object HandComparator extends Ordering[Hand] {
 
-  val FirstIsLess: Int = -1
-  val BothAreEqual: Int = 0
-  val FirstIsGreater: Int = 1
+
   /**
     * Following comparators conventions:
     * A negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
@@ -62,7 +62,7 @@ object HandComparator extends Ordering[Hand] {
 
   private def compareTie(a: Hand, b: Hand): Int = {
     a.ranking match {
-      case RoyalFlush => BothAreEqual
+      case RoyalFlush => 0
       case StraightFlush | Straight => topCard(a.cards) compare topCard(b.cards)
       case FullHouse => strengthOfKind(a.cards) compare strengthOfKind(b.cards)
       case _ =>

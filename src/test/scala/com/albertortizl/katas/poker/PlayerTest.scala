@@ -46,4 +46,12 @@ class PlayerTest extends FunSpec with Matchers {
 
   }
 
+  describe("abbreviate player") {
+
+    it("should abbreviate player to a string") {
+      val player = Player(HoleCards(King of Spades, Ace of Hearts),List(Ten of Hearts, Two of Clubs, Three of Clubs))
+      Player abbreviate player should equal ("Ks Ah Th 2c 3c")
+    }
+  }
+
 }

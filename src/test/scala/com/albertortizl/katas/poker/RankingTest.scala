@@ -60,6 +60,8 @@ class RankingTest extends FunSpec with Matchers {
   
   describe("choosing the best five-card combination") {
 
+    implicit val ordering: Ordering[Hand] = HandComparator
+
     it("should choose the best combination of five cards when there are two possible full houses") {
       val sevenCards =
         List(Ten of Clubs, Ten of Diamonds, Ten of Hearts, Three of Diamonds, Ace of Spades, Ace of Clubs, Ace of Diamonds)

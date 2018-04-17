@@ -14,7 +14,7 @@ class ShowdownSpec extends FeatureSpec with GivenWhenThen with Matchers{
     info("I want to know what hands the players are holding and which player won")
     info("So that I don't have to spend time calculating each hand to know the winner")
 
-    scenario("calculate ranking of a poker hands") {
+    scenario("calculate ranking and the winner of a poker hands") {
 
       Given("a round of poker")
       val hands = List(
@@ -31,17 +31,18 @@ class ShowdownSpec extends FeatureSpec with GivenWhenThen with Matchers{
 
       Then("hands not folded (with seven cards) should be ranked")
 
-//      result.isRight shouldBe (true)
+      result.isRight shouldBe (true)
+      result.right.get should contain theSameElementsInOrderAs List(
+        "Kc 9s Ks Kd 9d 3c 6d",
+        "9c Ah Ks Kd 9d 3c 6d",
+        "Ac Qc Ks Kd 9d 3c",
+        "9h 5s",
+        "4d 2d Ks Kd 9d 3c 6d",
+        "7s Ts Ks Kd 9d"
+      )
     }
 
-    scenario("calculate the winner") {
 
-      Given("a poker hands evaluator")
-      When("evaluator is called with a round of hands")
-      Then("the winner hand should be marked")
-
-      pending
-    }
     scenario("calculate the winner using the kickers") {
 
       Given("a poker hands evaluator")

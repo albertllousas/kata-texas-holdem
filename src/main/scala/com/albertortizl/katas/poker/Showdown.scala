@@ -2,19 +2,17 @@ package com.albertortizl.katas.poker
 
 import com.albertortizl.katas.poker.implicits._
 
-class Showdown(parseLines: (String) => Either[String, Player] = Player.parse,
-               toLine: (HandState) => String = HandState.toLine) {
+class Showdown(parseToPlayer: (String) => Either[String, Player] = Player.parse,
+               parseToLine: (HandState) => String = HandState.toLine) {
 
+  private implicit val ordering: Ordering[Hand] = HandComparator
   private val bestHand: List[Card] => Hand = Ranking.bestHand
   private val isWinner: (Hand, List[Hand]) => Boolean = Hand.isWinner
 
   def evaluate(lines: List[String]): Either[String, List[String]] = {
-
-    lines.map(parseLines)
-      .sequence
-      .map(compareHands)
-      .map(_ map toLine)
-
+    val players = lines.map(parseToPlayer).sequence
+    val resultHands = players.map(compareHands)
+    resultHands.map(_ map parseToLine)
   }
 
   private def compareHands(players: List[Player]): List[HandState] = {
