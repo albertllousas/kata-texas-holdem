@@ -65,7 +65,7 @@ Texas hold'em is a variation of the card game of poker.
 
 It is played with an English pack of 52 cards (jokers are not used). Tables join between 6 and 10 players.
 
-In Texas Hold'em players receive two cards. Another five community cards are put face up on the table; these cards are used by all players to get their best combination.
+In Texas Hold'em players receive two cards. Another five community cards are put face up on the table; these cards are used by all players to get their best 5 card combination.
 
 This is the ranking of the possible poker hands:
 
