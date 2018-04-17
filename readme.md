@@ -76,4 +76,7 @@ This is the ranking of the possible poker hands:
 
 ### Out of scope / to improve
 
-- Check card repetitions
+- General semantic validation:
+  - Check card repetitions
+  - Check invalid showdowns (only one line, all fold hands, ...) 
+- Rearranging the cards extension

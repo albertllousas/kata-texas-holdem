@@ -4,11 +4,26 @@ import org.scalatest.{FunSpec, Matchers}
 
 class HandStateTest extends FunSpec with Matchers {
 
-  describe("determine if a finalist is a winner") {
+  describe("hand to string") {
 
-    it("should win if there is no opponents") {
-//      val finalist = Finalist(Player(HoleCards(Ace of Clubs,Ace of Clubs),List(), false),Hand(FullHouse, List()))
-//      player.left.get should equal("Error parsing '', is not a valid card")
+    it("should parse winner hand to a string") {
+      val player = Player(HoleCards(Two of Clubs, Four of Clubs), List(Jack of Clubs, Seven of Clubs, Ace of Clubs, King of Diamonds, Queen of Spades))
+      val hand = Hand(List(Two of Clubs, Four of Clubs, Jack of Clubs, Seven of Clubs, Ace of Clubs),Flush)
+      val winner = Winner(player, hand)
+      HandState toLine winner should equal ("2c 4c Jc 7c Ac Kd Qs Flush (winner)")
+    }
+
+    it("should parse finalist hand to a string") {
+      val player = Player(HoleCards(Two of Clubs, Four of Clubs), List(Jack of Clubs, Seven of Clubs, Ace of Clubs, King of Diamonds, Queen of Spades))
+      val hand = Hand(List(Two of Clubs, Four of Clubs, Jack of Clubs, Seven of Clubs, Ace of Clubs),Flush)
+      val winner = Finalist(player, hand)
+      HandState toLine winner should equal ("2c 4c Jc 7c Ac Kd Qs Flush")
+    }
+
+    it("should parse folded hand to a string") {
+      val player = Player(HoleCards(Two of Clubs, Four of Clubs), List(Ace of Clubs, King of Diamonds, Queen of Spades))
+      val winner = Folded(player)
+      HandState toLine winner should equal ("2c 4c Ac Kd Qs")
     }
 
   }

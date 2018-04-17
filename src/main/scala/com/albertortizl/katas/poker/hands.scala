@@ -7,15 +7,15 @@ case class Hand(cards: List[Card], ranking: HandRanking)
 
 sealed trait HandState
 case class Folded(player: Player) extends HandState
-case class Finalist(player: Player, hand: Hand) extends HandState
-case class Winner(player: Player, hand: Hand) extends HandState
+case class Finalist(player: Player, bestHand: Hand) extends HandState
+case class Winner(player: Player, bestHand: Hand) extends HandState
 
 object HandState {
 
   def toLine(handState:HandState):String =
     handState match {
-      case w:Winner => s"${Player.abbreviate(w.player)} ${w.hand.ranking.toReadableString} (winner)"
-      case f:Finalist => s"${Player.abbreviate(f.player)} ${f.hand.ranking.toReadableString}"
+      case w:Winner => s"${Player.abbreviate(w.player)} ${w.bestHand.ranking.name} (winner)"
+      case f:Finalist => s"${Player.abbreviate(f.player)} ${f.bestHand.ranking.name}"
       case f:Folded => s"${Player.abbreviate(f.player)}"
     }
 }
