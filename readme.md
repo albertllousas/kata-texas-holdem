@@ -78,5 +78,5 @@ This is the ranking of the possible poker hands:
 
 - General semantic validation:
   - Check card repetitions
-  - Check invalid showdowns (only one line, all fold hands, ...) 
+  - Check invalid showdowns (all fold hands, invalid number of players...) 
 - Rearranging the cards extension

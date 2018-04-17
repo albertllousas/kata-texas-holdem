@@ -14,9 +14,9 @@ object Player extends Abbreviable[Player]{
   val BlankSpace = " "
   def parse(line: String): Either[String, Player] = {
     val sequenceOfEither: Seq[Either[String, Card]] = line split BlankSpace map Card.parse
-    val eitherOfList: Either[String, List[Card]] = sequenceOfEither.toList.sequence
+    val eitherOfCards: Either[String, List[Card]] = sequenceOfEither.toList.sequence
 
-    eitherOfList.flatMap {
+    eitherOfCards.flatMap {
       case p1 :: p2 :: communityCards if isValid(communityCards)  =>
         Right(Player(HoleCards(p1, p2), communityCards))
       case _ =>
