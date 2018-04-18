@@ -221,8 +221,9 @@ To determine the winner is just compare hands, so it seems pretty simple, but th
 
 - [tie-breaker-rules](https://www.adda52.com/poker/poker-rules/cash-game-rules/tie-breaker-rules)
 
-Check the compare hands algorithm in [HandComparator](src/main/scala/com/albertortizl/katas/poker/hands.scala#L49)
-Check the different test scenarios in [HandComparatorTest](src/test/scala/com/albertortizl/katas/poker/HandComparatorTest.scala)   
+- Check the compare hands algorithm in [HandComparator](src/main/scala/com/albertortizl/katas/poker/hands.scala#L49)
+
+- Check the different test scenarios in [HandComparatorTest](src/test/scala/com/albertortizl/katas/poker/HandComparatorTest.scala)   
 
 
 #### Some extensions
