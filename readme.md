@@ -4,7 +4,7 @@ This kata is based in [kata texas coding dojo](http://codingdojo.org/kata/TexasH
 
 ## The problem
 
-## Problem description
+### Problem description
 
 You work for a cable network; specifically, you are the resident hacker for a Texas Hold’Em Championship show.
 
@@ -58,20 +58,6 @@ And ‘c’, ’d’, ‘h’ and ’s’ for the suits, makes sense. Why aren�
 
 **BOB**: Hey! Show’s on in ten minutes! Get to work!
 
-### Texas Hold'em poker rules
-
-
-Texas hold'em is a variation of the card game of poker. 
-
-It is played with an English pack of 52 cards (jokers are not used). Tables join between 6 and 10 players.
-
-In Texas Hold'em players receive two cards. Another five community cards are put face up on the table; these cards are used by all players to get their best 5 card combination.
-
-This is the ranking of the possible poker hands:
-
-<p align="center">
-  <img src="img/Poker_Hand_Ranking.gif">
-</p>
 
 ## The solution
 
@@ -114,12 +100,133 @@ val hands = List(
 val result = new Showdown() evaluate hands
 ```
 
+The design was made using as an starter point, **user stories** and tdd outside-in, take a look in user stories in:
+
+- [ShowdownSpec](src/test/scala/com/albertortizl/katas/poker/ShowdownSpec.scala)
+
+
 #### Domain
 
+Texas hold'em is a variation of the card game of poker. 
+
+It is played with an English pack of 52 cards (jokers are not used). 
+
+So here comes the first domain, the deck as [adt](https://alvinalexander.com/scala/fp-book/algebraic-data-types-adts-in-scala):
+```scala
+sealed abstract class Suite
+case object Hearts extends Suite   //♥
+case object Diamonds extends Suite //♦
+case object Spades extends Suite   //♠
+case object Clubs extends Suite    //♣
+
+sealed abstract class Rank(val value:Int) {
+  def of(suite:Suite) :Card = Card(this, suite)
+}
+case object Two extends Rank(2)
+case object Three extends Rank(3)
+case object Four extends Rank(4)
+case object Five extends Rank(5)
+case object Six extends Rank(6)
+case object Seven extends Rank(7)
+case object Eight extends Rank(8)
+case object Nine extends Rank(9)
+case object Ten extends Rank(10)
+case object Jack extends Rank(11)
+case object Queen extends Rank(12)
+case object King extends Rank(13)
+case object Ace extends Rank(14)
+```
+
+Tables join between 6 and 10 players.
+
+In Texas Hold'em players receive two cards. Another five community cards are put face up on the table; these cards are used by all players to get their best 5 card combination.
+
+<p align="center">
+  <img src="img/texas.gif">
+</p>
+
+So we could abstract this in two different models:
+
+1. The player: (hole cards + community cards)
+```scala
+case class HoleCards(first: Card, second: Card)
+case class Player(holeCards: HoleCards, communityCards: List[Card]) {
+  def fold: Boolean = communityCards.lengthCompare(5) < 0
+  def allCards: List[Card] = holeCards.first :: holeCards.second :: communityCards
+}
+```
+2. The different states of the hand of the player
+
+   - Fold: The player folded
+   - Finalist: The player is in the last round showing its cards and pending to be compared with their opponents
+   - Winner: The hand which wins the final pot
+ 
+```scala
+
+sealed trait HandState
+case class Folded(player: Player) extends HandState
+case class Finalist(player: Player, bestHand: Hand) extends HandState
+case class Winner(player: Player, bestHand: Hand) extends HandState
+```
+
+Finally, the hand and the possible combinations (the hand ranking):
+```scala
+case class Hand(cards: List[Card], ranking: HandRanking)
+```
+
+<p align="center">
+  <img src="img/Poker_Hand_Ranking.gif">
+</p>
+
+```scala
+sealed abstract class HandRanking(val value: Int, val name:String)
+case object RoyalFlush extends HandRanking(10, "Royal Flush")
+case object StraightFlush extends HandRanking(9, "Straight Flush")
+case object FourOfAKind extends HandRanking(8, "Four of a Kind")
+case object FullHouse extends HandRanking(7, "Full House")
+case object Flush extends HandRanking(6, "Flush")
+case object Straight extends HandRanking(5, "Straight")
+case object ThreeOfAKind extends HandRanking(4, "Three of a Kind")
+case object TwoPair extends HandRanking(3, "Two Pair")
+case object OnePair extends HandRanking(2, "One Pair")
+case object HighCard extends HandRanking(1, "High Card")
+```
+
+#### Calculating the ranking
+
+As a part of this problem, it was to create a code to calculate the ranking of a hand, but trying to generate a code that
+someone without coding skills was able to verify that they are implemented correctly.
+
+```scala
+      if (cards.haveSameSuit && cards.areConsecutive && cards.haveHighCard(Ace)) RoyalFlush
+      else if (cards.haveSameSuit && cards.areConsecutive) StraightFlush
+      else if (cards.haveGroupOf(4)) FourOfAKind
+      else if (cards.haveGroupsOf(3)(2)) FullHouse
+      else if (cards.haveSameSuit) Flush
+      else if (cards.areConsecutive) Straight
+      else if (cards.haveGroupOf(3)) ThreeOfAKind
+      else if (cards.haveGroupsOf(2)(2)) TwoPair
+      else if (cards.haveGroupOf(2)) OnePair
+      else HighCard
+```
+Check the rest of the ranking code in [ranking](src/main/scala/com/albertortizl/katas/poker/ranking.scala)  
+  
+#### Determining the winner
+
+To determine the winner is just compare hands, so it seems pretty simple, but the difficult is when there is a tie:
+
+- [tie-breaker-rules](https://www.adda52.com/poker/poker-rules/cash-game-rules/tie-breaker-rules)
+
+Check the compare hands algorithm in [handComparator](src/main/scala/com/albertortizl/katas/poker/hands.scala)  
 
 
+#### Some extensions
 
-https://www.adda52.com/poker/poker-rules/cash-game-rules/tie-breaker-rules
+The input/output could be override, they are just functions by default that can be override as you want providing them 
+as a DI in Showdown class constructor parameters:
+
+- Input : (String) -> Player
+- Output: (HandState) -> String   
 
 ### Out of scope / to improve
 
