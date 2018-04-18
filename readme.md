@@ -104,7 +104,7 @@ val hands = List(
 val result = new Showdown() evaluate hands
 ```
 
-### User stories
+#### User stories
 
 The design was made using **user stories** and tdd outside-in, take a look at user stories in:
 
