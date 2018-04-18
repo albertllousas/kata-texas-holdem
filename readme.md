@@ -93,7 +93,7 @@ Orchestrate:
 3. Parse domain to the expected output
 
 
-
+Use:
 
 ```scala
 val hands = List(
@@ -104,7 +104,9 @@ val hands = List(
 val result = new Showdown() evaluate hands
 ```
 
-The design was made using as an starter point, **user stories** and tdd outside-in, take a look in user stories in:
+### User stories
+
+The design was made using **user stories** and tdd outside-in, take a look at user stories in:
 
 - [ShowdownSpec](src/test/scala/com/albertortizl/katas/poker/ShowdownSpec.scala)
 
