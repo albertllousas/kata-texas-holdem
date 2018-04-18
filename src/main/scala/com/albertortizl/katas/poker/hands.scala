@@ -49,6 +49,7 @@ object Hand {
 object HandComparator extends Ordering[Hand] {
 
 
+  private val Tie = 0
   /**
     * Following comparators conventions:
     * A negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
@@ -62,12 +63,12 @@ object HandComparator extends Ordering[Hand] {
 
   private def compareTie(a: Hand, b: Hand): Int = {
     a.ranking match {
-      case RoyalFlush => 0
+      case RoyalFlush => Tie
       case StraightFlush | Straight => topCard(a.cards) compare topCard(b.cards)
       case FullHouse => strengthOfKind(a.cards) compare strengthOfKind(b.cards)
       case _ =>
         val comparison = strengthOfKind(a.cards) compare strengthOfKind(b.cards)
-        if (comparison == 0) kickers(a.cards) compare kickers(b.cards) else comparison
+        if (comparison == Tie) kickers(a.cards) compare kickers(b.cards) else comparison
     }
   }
 

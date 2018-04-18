@@ -73,6 +73,39 @@ This is the ranking of the possible poker hands:
   <img src="texas_holdem_rankings.jpg">
 </p>
 
+## The solution
+
+The solution has been coded using TDD Outside-In in order to help to create the design.
+
+The goal of the kata was not just generate the expected output, but generate a good domain, decoupling it from the input/output parsing. 
+
+### Environment
+```bash
+sbt.version = 1.1.2
+scalaVersion := "2.12.5"
+```
+
+### Build and run the tests
+```bash
+sbt test 
+```
+
+### Approach
+
+There is one single entry point for the application, it has the functionality of facade and it orchestrate the
+two main parts of the implementation:
+
+1. Parse from string to bowling game domain class structure
+2. Call score algorithm to calculate the score from domain 
+
+
+Entry point: (AmericanTenPinBowling.ex)
+
+```kotlin
+val bowlingGame = AmericanTenPinBowling()
+bowlingGame totalScore "X 3/ 61 X X X 2/ 90 7/ XXX"
+
+https://www.adda52.com/poker/poker-rules/cash-game-rules/tie-breaker-rules
 
 ### Out of scope / to improve
 
