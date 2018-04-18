@@ -70,7 +70,7 @@ In Texas Hold'em players receive two cards. Another five community cards are put
 This is the ranking of the possible poker hands:
 
 <p align="center">
-  <img src="texas_holdem_rankings.jpg">
+  <img src="img/Poker_Hand_Ranking.gif">
 </p>
 
 ## The solution
@@ -80,7 +80,7 @@ The solution has been coded using TDD Outside-In in order to help to create the 
 The goal of the kata was not just generate the expected output, but generate a good domain, decoupling it from the input/output parsing. 
 
 ### Environment
-```bash
+```scala
 sbt.version = 1.1.2
 scalaVersion := "2.12.5"
 ```
@@ -92,18 +92,32 @@ sbt test
 
 ### Approach
 
-There is one single entry point for the application, it has the functionality of facade and it orchestrate the
-two main parts of the implementation:
+There is one single entry point for the designed solution, and it orchestrate the different parts of the problem, 
+it is called *showdown*, because showdown in poker, is a situation when, if more than one player remains 
+after the last betting round, remaining players expose and compare their hands to determine the winner or winners:
 
-1. Parse from string to bowling game domain class structure
-2. Call score algorithm to calculate the score from domain 
+1. Parse List of strings to the domain
+2. Compare hands of the players:
+     - Calculate the best hand of each player
+     - Determine who is the winner/s 
+3. Parse domain to the expected output
 
 
-Entry point: (AmericanTenPinBowling.ex)
+Entry point: (Showdown.scala)
 
-```kotlin
-val bowlingGame = AmericanTenPinBowling()
-bowlingGame totalScore "X 3/ 61 X X X 2/ 90 7/ XXX"
+```scala
+val hands = List(
+        "Kc 9s Ks Kd 9d 3c 6d",
+        "9c Ah Ks Kd 9d 3c 6d",
+        "Ac Qc Ks Kd 9d 3c"
+      )    
+val result = new Showdown() evaluate hands
+```
+
+#### Domain
+
+
+
 
 https://www.adda52.com/poker/poker-rules/cash-game-rules/tie-breaker-rules
 
