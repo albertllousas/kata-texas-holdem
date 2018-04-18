@@ -61,9 +61,9 @@ And ‘c’, ’d’, ‘h’ and ’s’ for the suits, makes sense. Why aren�
 
 ## The solution
 
-The solution has been coded using TDD Outside-In in order to help to create the design.
+The solution has been coded using **TDD Outside-In** in order to help to create the design.
 
-The goal of the kata was not just generate the expected output, but generate a good domain, decoupling it from the input/output parsing. 
+The goal of the kata was not just generate the expected output, but generate an **immutable domain** with the logic as **pure functions**, decoupling it from the input/output parsing. 
 
 ### Environment
 ```scala
@@ -79,8 +79,12 @@ sbt test
 ### Approach
 
 There is one single entry point for the designed solution, and it orchestrate the different parts of the problem, 
-it is called *showdown*, because showdown in poker, is a situation when, if more than one player remains 
-after the last betting round, remaining players expose and compare their hands to determine the winner or winners:
+it is called **showdown**, is a situation when, if more than one player remains after the last betting round, 
+remaining players expose and compare their hands to determine the winner or winners:
+
+Entry point: [Showdown.scala](src/main/scala/com/albertortizl/katas/poker/Showdown.scala)
+
+Orchestrate:
 
 1. Parse List of strings to the domain
 2. Compare hands of the players:
@@ -89,7 +93,7 @@ after the last betting round, remaining players expose and compare their hands t
 3. Parse domain to the expected output
 
 
-Entry point: (Showdown.scala)
+
 
 ```scala
 val hands = List(
