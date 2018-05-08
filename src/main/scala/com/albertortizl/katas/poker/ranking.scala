@@ -44,14 +44,22 @@ object Ranking {
 
   }
 
+  val consecutiveCards = List(Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace)
+
 
   private implicit class Rankable(val cards: List[Card]) extends AnyVal {
 
     def haveSameSuit: Boolean = cards.map(_.suite).toSet.size == 1
 
     def areConsecutive: Boolean = {
-      val sortedCards = cards.sortWith(compareRank)
-      sortedCards.last.rank.value - sortedCards.head.rank.value == sortedCards.length - 1
+      def compare(cards: List[Rank], consecutive: List[Rank]): Boolean = {
+        consecutive match {
+          case consecutive: List[_] if consecutive.length < 5 => false
+          case consecutive: List[_] if consecutive.take(5).toSet.equals(cards.toSet) => true
+          case _ :: tail => compare(cards, tail)
+        }
+      }
+      compare(cards.map(_.rank), consecutiveCards)
     }
 
     def haveHighCard(rank: Rank): Boolean = cards.maxBy(_.rank.value).rank == rank

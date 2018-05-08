@@ -51,6 +51,12 @@ class HandComparatorTest extends FunSpec with Matchers {
       HandComparator compare(hand1, hand2) should be(0)
     }
 
+    it("if two players have Straights, one starting with ace, the other with two the winner is the second one") {
+      val hand1 = Hand(List(Ace of Clubs, Two of Diamonds, Three of Clubs, Four of Clubs, Five of Clubs), Straight)
+      val hand2 = Hand(List(Two of Diamonds, Three of Clubs, Four of Clubs, Five of Clubs, Six of Clubs), Straight)
+      HandComparator compare(hand1, hand2) should be(-1)
+    }
+
     it("if two players have Straights, the winner is the player with the highest card used in the Straight") {
       val hand1 = Hand(List(Nine of Clubs, Jack of Diamonds, Ten of Clubs, Queen of Clubs, King of Clubs), Straight)
       val hand2 = Hand(List(Nine of Clubs, Jack of Diamonds, Ten of Clubs, Queen of Clubs, Eight of Clubs), Straight)

@@ -36,6 +36,16 @@ class RankingTest extends FunSpec with Matchers {
       Ranking evaluate fiveCards should be(Straight)
     }
 
+    it("should rank a hand with a straight when it starts with Ace") {
+      val fiveCards = List(Ace of Clubs, Two of Clubs, Three of Hearts, Four of Diamonds, Five of Spades)
+      Ranking evaluate fiveCards should be(Straight)
+    }
+
+    it("should rank a hand with a straight when it ends with Ace") {
+      val fiveCards = List(Ten of Clubs, Jack of Clubs, Queen of Hearts, King of Diamonds, Ace of Spades)
+      Ranking evaluate fiveCards should be(Straight)
+    }
+
     it("should rank a hand with a three of a kind") {
       val fiveCards = List(Ten of Clubs, Three of Clubs, Ten of Hearts, Ten of Diamonds, Ace of Spades)
       Ranking evaluate fiveCards should be(ThreeOfAKind)
