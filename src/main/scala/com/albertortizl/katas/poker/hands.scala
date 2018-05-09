@@ -1,8 +1,5 @@
 package com.albertortizl.katas.poker
 
-
-import scala.util.Sorting
-
 case class Hand(cards: List[Card], ranking: HandRanking)
 
 sealed trait HandState
@@ -12,11 +9,11 @@ case class Winner(player: Player, bestHand: Hand) extends HandState
 
 object HandState {
 
-  def toLine(handState:HandState):String =
+  def toLine(handState: HandState): String =
     handState match {
-      case w:Winner => s"${Player.abbreviate(w.player)} ${w.bestHand.ranking.name} (winner)"
-      case f:Finalist => s"${Player.abbreviate(f.player)} ${f.bestHand.ranking.name}"
-      case f:Folded => s"${Player.abbreviate(f.player)}"
+      case w: Winner => s"${Player.abbreviate(w.player)} ${w.bestHand.ranking.name} (winner)"
+      case f: Finalist => s"${Player.abbreviate(f.player)} ${f.bestHand.ranking.name}"
+      case f: Folded => s"${Player.abbreviate(f.player)}"
     }
 }
 
@@ -28,12 +25,9 @@ object Hand {
   val BothAreEqual: Int = 0
   val FirstIsGreater: Int = 1
 
-  def isWinner(hand: Hand, opponents: List[Hand])(implicit ordering:Ordering[Hand]):  Boolean = {
+  def isWinner(hand: Hand, opponents: List[Hand])(implicit ordering: Ordering[Hand]): Boolean = {
 
-    val opponentHands = opponents.toArray
-    //way to doit immutable?
-    Sorting.quickSort(opponentHands)(ordering)
-    val opponentsHandsDesc: Array[Hand] = opponentHands.reverse
+    val opponentsHandsDesc: List[Hand] = opponents.sorted.reverse
 
     val compareResult = opponentsHandsDesc
       .headOption
@@ -51,6 +45,7 @@ object HandComparator extends Ordering[Hand] {
 
 
   private val Tie = 0
+
   /**
     * Following comparators conventions:
     * A negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
@@ -93,7 +88,7 @@ object HandComparator extends Ordering[Hand] {
 
   private def sumValuesOfStraight(cards: List[Card]): Int = {
 
-    val aceStartsTheStraight = Set(Ace,Two,Three,Four,Five).equals(cards.map(_.rank).toSet)
+    val aceStartsTheStraight = Set(Ace, Two, Three, Four, Five).equals(cards.map(_.rank).toSet)
 
     cards.map(_.rank) collect {
       case Ace if aceStartsTheStraight => 1
