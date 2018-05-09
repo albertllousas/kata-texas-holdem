@@ -9,7 +9,7 @@ case class Player(holeCards: HoleCards, communityCards: List[Card]) {
 }
 
 
-object Player extends Abbreviable[Player]{
+object Player extends DefaultParsing[Player]{
 
   val BlankSpace = " "
   def parse(line: String): Either[String, Player] = {
