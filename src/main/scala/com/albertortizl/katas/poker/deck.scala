@@ -6,7 +6,7 @@ case object Diamonds extends Suite //♦
 case object Spades extends Suite   //♠
 case object Clubs extends Suite    //♣
 
-sealed abstract class Rank(val value:Int) {
+sealed abstract class Rank(val maxValue:Int) {
   def of(suite:Suite) :Card = Card(this, suite)
 }
 case object Two extends Rank(2)
@@ -84,7 +84,7 @@ object Rank extends Abbreviable[Rank]{
       case Queen => "Q"
       case King => "K"
       case Ace => "A"
-      case rank:Rank => rank.value.toString
+      case rank:Rank => rank.maxValue.toString
     }
 }
 

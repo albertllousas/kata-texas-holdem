@@ -31,6 +31,7 @@ object Hand {
   def isWinner(hand: Hand, opponents: List[Hand])(implicit ordering:Ordering[Hand]):  Boolean = {
 
     val opponentHands = opponents.toArray
+    //way to doit immutable?
     Sorting.quickSort(opponentHands)(ordering)
     val opponentsHandsDesc: Array[Hand] = opponentHands.reverse
 
@@ -64,7 +65,7 @@ object HandComparator extends Ordering[Hand] {
   private def compareTie(a: Hand, b: Hand): Int = {
     a.ranking match {
       case RoyalFlush => Tie
-      case StraightFlush | Straight => topCard(a.cards) compare topCard(b.cards)
+      case StraightFlush | Straight => sumValuesOfStraight(a.cards) compare sumValuesOfStraight(b.cards)
       case FullHouse => strengthOfKind(a.cards) compare strengthOfKind(b.cards)
       case _ =>
         val comparison = strengthOfKind(a.cards) compare strengthOfKind(b.cards)
@@ -75,7 +76,7 @@ object HandComparator extends Ordering[Hand] {
   private def kickers(cards: List[Card]): List[Int] = {
     val groupedRanks: Map[Rank, List[Card]] = cards.groupBy(_.rank)
     val onlyRanksWithoutRepetitions = groupedRanks.filter { case (_, v) => v.lengthCompare(1) == 0 }
-    onlyRanksWithoutRepetitions.keys.map(_.value).toList
+    onlyRanksWithoutRepetitions.keys.map(_.maxValue).toList
   }
 
   private implicit class KickersComparator(val kickers: List[Int]) extends AnyVal {
@@ -87,10 +88,18 @@ object HandComparator extends Ordering[Hand] {
   private def strengthOfKind(cards: List[Card]): Int = {
     val groupedRanks: Map[Rank, List[Card]] = cards.groupBy(_.rank)
     val deletedKickers = groupedRanks.filter { case (_, v) => v.lengthCompare(1) > 0 }
-    deletedKickers.values.flatten.map(_.rank.value).sum
+    deletedKickers.values.flatten.map(_.rank.maxValue).sum
   }
 
-  private def topCard(cards: List[Card]): Int = cards.maxBy(_.rank.value).rank.value
+  private def sumValuesOfStraight(cards: List[Card]): Int = {
+
+    val aceStartsTheStraight = Set(Ace,Two,Three,Four,Five).equals(cards.map(_.rank).toSet)
+
+    cards.map(_.rank) collect {
+      case Ace if aceStartsTheStraight => 1
+      case rank => rank.maxValue
+    } sum
+  }
 }
 
 

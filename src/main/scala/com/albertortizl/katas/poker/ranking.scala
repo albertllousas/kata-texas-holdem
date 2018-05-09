@@ -15,7 +15,6 @@ case object HighCard extends HandRanking(1, "High Card")
 
 object Ranking {
 
-  private val compareRank: (Card, Card) => Boolean = (c1, c2) => c1.rank.value < c2.rank.value
 
   def bestHand(cards: List[Card])(implicit ordering: Ordering[Hand]): Hand = {
 
@@ -31,7 +30,7 @@ object Ranking {
 
       require(cards.lengthCompare(5) == 0, s"'$cards' can not be evaluated, should be 5 cards")
 
-      if (cards.haveSameSuit && cards.areConsecutive && cards.haveHighCard(Ace)) RoyalFlush
+      if (cards.haveSameSuit && cards.areConsecutiveUntilAce) RoyalFlush
       else if (cards.haveSameSuit && cards.areConsecutive) StraightFlush
       else if (cards.haveGroupOf(4)) FourOfAKind
       else if (cards.haveGroupsOf(3)(2)) FullHouse
@@ -44,7 +43,7 @@ object Ranking {
 
   }
 
-  val consecutiveCards = List(Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace)
+  private val consecutiveRanks = List(Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace)
 
 
   private implicit class Rankable(val cards: List[Card]) extends AnyVal {
@@ -52,17 +51,17 @@ object Ranking {
     def haveSameSuit: Boolean = cards.map(_.suite).toSet.size == 1
 
     def areConsecutive: Boolean = {
-      def compare(cards: List[Rank], consecutive: List[Rank]): Boolean = {
+      def compare(ranks: List[Rank], consecutive: List[Rank]): Boolean = {
         consecutive match {
           case consecutive: List[_] if consecutive.length < 5 => false
-          case consecutive: List[_] if consecutive.take(5).toSet.equals(cards.toSet) => true
-          case _ :: tail => compare(cards, tail)
+          case consecutive: List[_] if consecutive.take(5).toSet.equals(ranks.toSet) => true
+          case _ :: tail => compare(ranks, tail)
         }
       }
-      compare(cards.map(_.rank), consecutiveCards)
+      compare(cards.map(_.rank), consecutiveRanks)
     }
 
-    def haveHighCard(rank: Rank): Boolean = cards.maxBy(_.rank.value).rank == rank
+    def areConsecutiveUntilAce: Boolean = Set(Ten, Jack, Queen, King, Ace).equals(cards.map(_.rank).toSet)
 
     def haveGroupOf(size: Int): Boolean = {
       rankRepetitions(cards).values.exists(_ == size)
