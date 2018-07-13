@@ -2,8 +2,10 @@ package com.albertortizl.katas.poker
 
 import com.albertortizl.katas.poker.implicits._
 
-class Showdown(parseToPlayer: (String) => Either[String, Player] = Player.parse,
-               parseToLine: (HandState) => String = HandState.toLine) {
+class Showdown(
+                parseToPlayer: String => Either[String, Player] = Player.parse,
+                parseToLine: HandState => String = HandState.toLine
+              ) {
 
   private implicit val ordering: Ordering[Hand] = HandComparator
   private val bestHand: List[Card] => Hand = Ranking.bestHand
@@ -20,7 +22,7 @@ class Showdown(parseToPlayer: (String) => Either[String, Player] = Player.parse,
     val hands: List[HandState] = players.map(p => if (p.fold) Folded(p) else Finalist(p, bestHand(p.allCards)))
 
     hands.map {
-      case finalist@Finalist(pc, hand) if isWinner(finalist.bestHand, opponents(finalist, hands)) => Winner(pc, hand)
+      case finalist@Finalist(player, hand) if isWinner(finalist.bestHand, opponents(finalist, hands)) => Winner(player, hand)
       case finalist: Finalist => finalist
       case folded: Folded => folded
     }
