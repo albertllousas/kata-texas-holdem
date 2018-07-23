@@ -25,9 +25,9 @@ object Hand {
   val BothAreEqual: Int = 0
   val FirstIsGreater: Int = 1
 
-  def isWinner(hand: Hand, opponents: List[Hand])(implicit ordering: Ordering[Hand]): Boolean = {
+  def isWinner(hand: Hand, opponentsBestHands: List[Hand])(implicit ordering: Ordering[Hand]): Boolean = {
 
-    val opponentsHandsDesc: List[Hand] = opponents.sorted.reverse
+    val opponentsHandsDesc: List[Hand] = opponentsBestHands.sorted.reverse
 
     val compareResult = opponentsHandsDesc
       .headOption

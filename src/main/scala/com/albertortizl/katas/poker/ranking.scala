@@ -1,15 +1,25 @@
 package com.albertortizl.katas.poker
 
-sealed abstract class HandRanking(val value: Int, val name:String)
+sealed abstract class HandRanking(val value: Int, val name: String)
+
 case object RoyalFlush extends HandRanking(10, "Royal Flush")
+
 case object StraightFlush extends HandRanking(9, "Straight Flush")
+
 case object FourOfAKind extends HandRanking(8, "Four of a Kind")
+
 case object FullHouse extends HandRanking(7, "Full House")
+
 case object Flush extends HandRanking(6, "Flush")
+
 case object Straight extends HandRanking(5, "Straight")
+
 case object ThreeOfAKind extends HandRanking(4, "Three of a Kind")
+
 case object TwoPair extends HandRanking(3, "Two Pair")
+
 case object OnePair extends HandRanking(2, "One Pair")
+
 case object HighCard extends HandRanking(1, "High Card")
 
 
@@ -28,18 +38,21 @@ object Ranking {
 
   def evaluate(cards: List[Card]): HandRanking = {
 
-      require(cards.lengthCompare(5) == 0, s"'$cards' can not be evaluated, should be 5 cards")
+    require(cards.lengthCompare(5) == 0, s"'$cards' can not be evaluated, should be 5 cards")
 
-      if (cards.haveSameSuit && cards.areConsecutiveUntilAce) RoyalFlush
-      else if (cards.haveSameSuit && cards.areConsecutive) StraightFlush
-      else if (cards.haveGroupOf(4)) FourOfAKind
-      else if (cards.haveGroupsOf(3)(2)) FullHouse
-      else if (cards.haveSameSuit) Flush
-      else if (cards.areConsecutive) Straight
-      else if (cards.haveGroupOf(3)) ThreeOfAKind
-      else if (cards.haveGroupsOf(2)(2)) TwoPair
-      else if (cards.haveGroupOf(2)) OnePair
-      else HighCard
+    // The implementation is a block of if's because as the problem says
+    // someone without coding skills should be able to understand the rules
+
+    if (cards.haveSameSuit && cards.areConsecutiveUntilAce) RoyalFlush
+    else if (cards.haveSameSuit && cards.areConsecutive) StraightFlush
+    else if (cards.haveGroupOf(4)) FourOfAKind
+    else if (cards.haveGroupsOf(3)(2)) FullHouse
+    else if (cards.haveSameSuit) Flush
+    else if (cards.areConsecutive) Straight
+    else if (cards.haveGroupOf(3)) ThreeOfAKind
+    else if (cards.haveGroupsOf(2)(2)) TwoPair
+    else if (cards.haveGroupOf(2)) OnePair
+    else HighCard
 
   }
 
@@ -58,6 +71,7 @@ object Ranking {
           case _ :: tail => compare(ranks, tail)
         }
       }
+
       compare(cards.map(_.rank), consecutiveRanks)
     }
 

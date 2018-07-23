@@ -19,11 +19,16 @@ class Showdown(
 
   private def compareHands(players: List[Player]): List[HandState] = {
 
-    val hands: List[HandState] = players.map(p => if (p.fold) Folded(p) else Finalist(p, bestHand(p.allCards)))
+    val hands: List[HandState] = players.map(
+      player =>
+        if (player.fold) Folded(player)
+        else Finalist(player, bestHand(player.allCards))
+    )
 
     hands.map {
-      case finalist@Finalist(player, hand) if isWinner(finalist.bestHand, opponents(finalist, hands)) => Winner(player, hand)
-      case finalist: Finalist => finalist
+      case finalist@Finalist(player, hand)
+        if isWinner(finalist.bestHand, opponents(finalist, hands)) => Winner(player, hand)
+      case nonWinner: Finalist => nonWinner
       case folded: Folded => folded
     }
   }

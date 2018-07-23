@@ -15,14 +15,14 @@ object Player extends DefaultParsing[Player]{
   def parse(line: String): Either[String, Player] = {
     val cards: Seq[Either[String, Card]] = line split BlankSpace map Card.parse
     cards.toList.sequence.flatMap {
-      case p1 :: p2 :: communityCards if isValid(communityCards)  =>
-        Right(Player(HoleCards(p1, p2), communityCards))
+      case firstPlayerCard :: secondPlayerCard :: communityCards if areValid(communityCards)  =>
+        Right(Player(HoleCards(firstPlayerCard, secondPlayerCard), communityCards))
       case _ =>
         Left(s"'$line' are not a valid set of cards")
     }
   }
 
-  private def isValid(communityCards: List[Card]) = communityCards.lengthCompare(5) <= 0
+  private def areValid(communityCards: List[Card]) = communityCards.lengthCompare(5) <= 0
 
   def abbreviate(player: Player): String = s"${player.allCards.map(Card.abbreviate).mkString(BlankSpace)}"
 }
